@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "hono": "^4.11.3",
-    ""
+    "@repo/core": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "latest",
