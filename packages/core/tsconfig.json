@@ -1,14 +1,10 @@
 {
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "strict": true,
-    "moduleResolution": "node",
     "module": "CommonJS",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "moduleResolution": "node"
   },
-  "include": ["."],
-  "exclude": ["node_modules", "bench", "__test__"]
+  "include": [
+    "."
+  ]
 }

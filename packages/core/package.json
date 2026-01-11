@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@repo/core",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -38,6 +38,7 @@
     "@oxc-node/core": "^0.0.35",
     "@taplo/cli": "^0.7.0",
     "@tybys/wasm-util": "^0.10.0",
+    "@repo/typescript-config": "workspace:*",
     "ava": "^6.4.1",
     "tinybench": "^6.0.0",
     "typescript": "^5.9.2"
