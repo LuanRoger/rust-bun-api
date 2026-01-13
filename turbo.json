@@ -14,9 +14,9 @@
         "target/**"
       ]
     },
-    "lint": {
+    "test": {
       "dependsOn": [
-        "^lint"
+        "build"
       ]
     },
     "check-types": {
