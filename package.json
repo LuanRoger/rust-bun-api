@@ -5,7 +5,9 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "test": "turbo run test",
-    "lint": "biome check .",
+    "check": "biome check .",
+    "lint:write": "biome lint . --write",
+    "format:write": "biome format . --write",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
