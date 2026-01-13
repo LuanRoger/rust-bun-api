@@ -7,7 +7,7 @@
     "test": "turbo run test",
     "check": "biome check .",
     "lint:write": "biome lint . --write",
-    "format:write": "biome format . --write",
+    "format:write": "biome format . --write && turbo run format",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
