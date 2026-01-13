@@ -2,18 +2,18 @@ name: CI
 env:
   DEBUG: napi:*
   APP_NAME: core
-  MACOSX_DEPLOYMENT_TARGET: '10.13'
-  CARGO_INCREMENTAL: '1'
-'on':
+  MACOSX_DEPLOYMENT_TARGET: "10.13"
+  CARGO_INCREMENTAL: "1"
+"on":
   push:
     branches:
       - main
     tags-ignore:
-      - '**'
+      - "**"
     paths-ignore:
-      - '**/*.md'
+      - "**/*.md"
       - LICENSE
-      - '**/*.gitignore'
+      - "**/*.gitignore"
       - .editorconfig
       - docs/**
   pull_request: null
@@ -25,23 +25,24 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: yarn
-      - name: Install
+          bun-version: 1.3.5
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
       - name: Install dependencies
-        run: yarn install
-      - name: Oxlint
-        run: yarn lint
+        run: bun install
+      - name: Biome
+        run: bun lint
       - name: Cargo fmt
+        working-directory: packages/core
         run: cargo fmt -- --check
       - name: Clippy
+        working-directory: packages/core
         run: cargo clippy
   build:
     strategy:
@@ -49,27 +50,29 @@ jobs:
       matrix:
         settings:
           - host: windows-latest
-            build: yarn build --target x86_64-pc-windows-msvc
+            build: bun run build --target x86_64-pc-windows-msvc
             target: x86_64-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            build: yarn build --target x86_64-unknown-linux-gnu --use-napi-cross
+            build: bun run build --target x86_64-unknown-linux-gnu --use-napi-cross
     name: stable - ${{ matrix.settings.target }} - node@22
     runs-on: ${{ matrix.settings.host }}
+    defaults:
+      run:
+        working-directory: packages/core
     steps:
-      - uses: actions/checkout@v6
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: yarn
-      - name: Install
+          bun-version: 1.3.5
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
       - name: Cache cargo
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry/index/
@@ -77,7 +80,7 @@ jobs:
             ~/.cargo/git/db/
             ~/.napi-rs
             .cargo-cache
-            target/
+            packages/core/target/
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
       - uses: mlugg/setup-zig@v2
         if: ${{ contains(matrix.settings.target, 'musl') }}
@@ -95,17 +98,18 @@ jobs:
         if: ${{ matrix.settings.setup }}
         shell: bash
       - name: Install dependencies
-        run: yarn install
+        run: bun install
+        working-directory: .
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
           path: |
-            ${{ env.APP_NAME }}.*.node
-            ${{ env.APP_NAME }}.*.wasm
+            packages/core/${{ env.APP_NAME }}.*.node
+            packages/core/${{ env.APP_NAME }}.*.wasm
           if-no-files-found: error
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
@@ -119,29 +123,27 @@ jobs:
             target: x86_64-pc-windows-msvc
             architecture: x64
         node:
-          - '20'
-          - '22'
+          - "20"
+          - "22"
     runs-on: ${{ matrix.settings.host }}
     steps:
-      - uses: actions/checkout@v6
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-          architecture: ${{ matrix.settings.architecture }}
+          bun-version: 1.3.5
       - name: Install dependencies
-        run: yarn install
+        run: bun install
       - name: Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: .
+          path: packages/core
       - name: List packages
         run: ls -R .
         shell: bash
       - name: Test bindings
-        run: yarn test
+        run: bun test
   test-linux-binding:
     name: Test ${{ matrix.target }} - node@${{ matrix.node }}
     needs:
@@ -152,16 +154,15 @@ jobs:
         target:
           - x86_64-unknown-linux-gnu
         node:
-          - '20'
-          - '22'
+          - "20"
+          - "22"
     runs-on: ${{ contains(matrix.target, 'aarch64') && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     steps:
-      - uses: actions/checkout@v6
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
+          bun-version: 1.3.5
       - name: Output docker params
         id: docker
         run: |
@@ -182,15 +183,12 @@ jobs:
             }
           " >> $GITHUB_OUTPUT
       - name: Install dependencies
-        run: |
-          yarn config set --json supportedArchitectures.cpu '["current", "arm64", "x64", "arm"]'
-          yarn config set --json supportedArchitectures.libc '["current", "musl", "gnu"]'
-          yarn install
+        run: bun install
       - name: Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: bindings-${{ matrix.target }}
-          path: .
+          path: packages/core
       - name: List packages
         run: ls -R .
         shell: bash
@@ -205,8 +203,10 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ steps.docker.outputs.IMAGE }}
-          options: '-v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }} --platform ${{ steps.docker.outputs.PLATFORM }}'
-          run: yarn test
+          options: "-v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }} --platform ${{ steps.docker.outputs.PLATFORM }}"
+          run: |
+            npm install -g bun
+            bun test
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -218,26 +218,28 @@ jobs:
       - test-macOS-windows-binding
       - test-linux-binding
     steps:
-      - uses: actions/checkout@v6
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: yarn
+          bun-version: 1.3.5
       - name: Install dependencies
-        run: yarn install
-      - name: create npm dirs
-        run: yarn napi create-npm-dirs
+        run: bun install
+      - name: Create npm dirs
+        run: bun napi create-npm-dirs
+        working-directory: packages/core
       - name: Download all artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       - name: Move artifacts
-        run: yarn artifacts
+        run: bun run artifacts
+        working-directory: packages/core
       - name: List packages
-        run: ls -R ./npm
+        run: ls -R ./packages/core/npm
         shell: bash
       - name: Publish
+        working-directory: packages/core
         run: |
           npm config set provenance true
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
