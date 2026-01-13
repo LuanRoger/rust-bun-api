@@ -27,7 +27,7 @@
     "format:toml": "taplo format",
     "format:rs": "cargo fmt",
     "prepublishOnly": "napi prepublish -t npm",
-    "test": "ava",
+    "test": "vitest",
     "preversion": "napi build --platform && git add .",
     "version": "napi version"
   },
@@ -35,31 +35,10 @@
     "@emnapi/core": "^1.5.0",
     "@emnapi/runtime": "^1.5.0",
     "@napi-rs/cli": "^3.2.0",
-    "@oxc-node/core": "^0.0.35",
+    "@repo/typescript-config": "workspace:*",
     "@taplo/cli": "^0.7.0",
     "@tybys/wasm-util": "^0.10.0",
-    "@repo/typescript-config": "workspace:*",
-    "ava": "^6.4.1",
-    "tinybench": "^6.0.0",
-    "typescript": "^5.9.2"
-  },
-  "lint-staged": {
-    "*.toml": [
-      "taplo format"
-    ]
-  },
-  "ava": {
-    "extensions": {
-      "ts": "module"
-    },
-    "timeout": "2m",
-    "workerThreads": false,
-    "environmentVariables": {
-      "OXC_TSCONFIG_PATH": "./__test__/tsconfig.json"
-    },
-    "nodeArguments": [
-      "--import",
-      "@oxc-node/core/register"
-    ]
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.17"
   }
 }
