@@ -4,5 +4,8 @@
   "files": {
     "ignoreUnknown": true,
     "includes": ["apps/**/*", "!packages/core/**/*"]
+  },
+  "javascript": {
+    "globals": ["Bun"]
   }
 }
