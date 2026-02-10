@@ -38,7 +38,8 @@
     "@repo/typescript-config": "workspace:*",
     "@taplo/cli": "^0.7.0",
     "@tybys/wasm-util": "^0.10.1",
-    "typescript": "^5.9.3",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:",
     "vitest": "^4.0.18"
   }
 }
