@@ -27,9 +27,6 @@
     "format:toml": "taplo format",
     "format:rs": "cargo fmt",
     "prepublishOnly": "napi prepublish -t npm",
-    "test": "vitest run",
-    "preversion": "napi build --platform && git add .",
-    "version": "napi version"
   },
   "devDependencies": {
     "@emnapi/core": "^1.8.1",
@@ -39,7 +36,6 @@
     "@taplo/cli": "^0.7.0",
     "@tybys/wasm-util": "^0.10.1",
     "@types/bun": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "^4.0.18"
+    "typescript": "catalog:"
   }
 }
