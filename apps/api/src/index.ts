@@ -1,13 +1,25 @@
-import { plus100 } from "@repo/core";
-import { Hono } from "hono";
+import { fib } from "@repo/core";
+import { Elysia } from "elysia";
+import z from "zod";
 
-const app = new Hono();
+const app = new Elysia()
+  .get(
+    "/fib/:n",
+    ({ status, params }) => {
+      const { n } = params;
 
-app.get("/:value", (c) => {
-  const value = c.req.param("value");
-  const pasedValue = Number.parseInt(value, 10);
+      const result = fib(n);
 
-  return c.json({ message: "Hello, World!", plus100: plus100(pasedValue) });
-});
+      return status(200, { result });
+    },
+    {
+      params: z.object({
+        n: z.coerce.number().positive(),
+      }),
+    }
+  )
+  .listen(3000);
 
-export default app;
+console.log(
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+);
