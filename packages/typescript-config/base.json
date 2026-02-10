@@ -3,7 +3,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "strict": true,
@@ -25,8 +27,7 @@
     "node_modules",
     "dist",
     "build",
-    "bench",
-    "__test__",
+    "target",
     "**/*.test.ts",
     "**/*.spec.ts"
   ]
