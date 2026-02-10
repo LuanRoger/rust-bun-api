@@ -7,7 +7,7 @@
     "start": "bun run --filter=\"*\" start",
     "test": "bun run --filter=\"*\" test",
     "check": "ultracite check .",
-    "format:write": "ultracite fix && turbo run format"
+    "fix": "ultracite fix && bun run --filter=\"*\" format"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.14",
