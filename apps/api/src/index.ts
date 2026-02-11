@@ -1,25 +1,22 @@
-import { fib } from "@repo/core";
-import { Elysia } from "elysia";
-import z from "zod";
+import cluster from "node:cluster";
+import os from "node:os";
+import process from "node:process";
 
-const app = new Elysia()
-  .get(
-    "/fib/:n",
-    ({ status, params }) => {
-      const { n } = params;
+if (cluster.isPrimary) {
+  const numCPUs = os.availableParallelism();
+  console.log(`Primary ${process.pid} is running, forking ${numCPUs} workers`);
 
-      const result = fib(n);
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 
-      return status(200, { result });
-    },
-    {
-      params: z.object({
-        n: z.coerce.number().positive(),
-      }),
-    }
-  )
-  .listen(3000);
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(
+      `Worker ${worker.process.pid} died (code: ${code}, signal: ${signal}), restarting...`
+    );
+    cluster.fork();
+  });
+} else {
+  await import("./server");
+  console.log(`Worker ${process.pid} started`);
+}
