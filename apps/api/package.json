@@ -1,9 +1,10 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun --minify",
-    "start": "bun run ./dist/index.js"
+    "dev": "bun run --hot src/server.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --minify-whitespace --minify-syntax --external @repo/core",
+    "compile": "bun build ./src/index.ts --compile --minify-whitespace --minify-syntax --target bun-linux-x64 --outfile ./dist/compiled/api --external @repo/core",
+    "start": "NODE_ENV=production bun run ./dist/index.js"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
