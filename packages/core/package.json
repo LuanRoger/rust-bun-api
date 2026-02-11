@@ -26,7 +26,7 @@
     "format": "npm run format:toml && npm run format:rs",
     "format:toml": "taplo format",
     "format:rs": "cargo fmt",
-    "prepublishOnly": "napi prepublish -t npm",
+    "prepublishOnly": "napi prepublish -t npm"
   },
   "devDependencies": {
     "@emnapi/core": "^1.8.1",

@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build artifacts
+dist
+**/dist
+target
+**/target
+*.node
+!core.linux-x64-gnu.node
+
+# Development files
+.git
+.github
+.zed
+*.log
+*.md
+README.md
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+coverage
+
+# Rust artifacts
+**/*.rs.bk
+**/Cargo.lock.bak
+
+# Bun
+.bun
+
+# Misc
+*.tgz
+.npmrc
+.yarnrc
