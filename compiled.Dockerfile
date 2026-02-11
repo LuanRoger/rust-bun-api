@@ -47,7 +47,7 @@ COPY apps/api ./apps/api
 ENV NODE_ENV=production
 WORKDIR /usr/src/app/apps/api
 
-RUN bun run build
+RUN bun run compile
 
 # Stage 3: Production image
 FROM oven/bun:1.3.9-slim AS release
@@ -72,4 +72,4 @@ EXPOSE 3000/tcp
 
 WORKDIR /usr/src/app/apps/api
 
-ENTRYPOINT ["bun", "run", "./dist/index.js"]
+ENTRYPOINT ["./dist/compiled/api"]
