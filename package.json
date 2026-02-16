@@ -7,7 +7,7 @@
     "start": "bun run --workspaces start",
     "test": "bun run --workspaces test",
     "check": "ultracite check .",
-    "fix": "ultracite fix && bun run --workspaces format"
+    "fix": "ultracite fix && bun run --filter=\"@repo/core\" format"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.0",
