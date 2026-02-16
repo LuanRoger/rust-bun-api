@@ -20,9 +20,9 @@
     "node": ">= 12.22.0 < 13 || >= 14.17.0 < 15 || >= 15.12.0 < 16 || >= 16.0.0"
   },
   "scripts": {
-    "artifacts": "napi artifacts",
-    "bench": "node --import @oxc-node/core/register benchmark/bench.ts",
+    "dev": "napi build --platform",
     "build": "napi build --platform --release",
+    "artifacts": "napi artifacts",
     "format": "npm run format:toml && npm run format:rs",
     "format:toml": "taplo format",
     "format:rs": "cargo fmt",
