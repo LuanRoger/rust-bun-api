@@ -2,12 +2,12 @@
   "name": "rust-bun-api",
   "private": true,
   "scripts": {
-    "build": "bun run --filter=\"*\" build",
-    "dev": "bun run --filter=\"*\" dev",
-    "start": "bun run --filter=\"*\" start",
-    "test": "bun run --filter=\"*\" test",
+    "build": "bun run --workspaces build",
+    "dev": "bun run ./scripts/dev-core-api.ts",
+    "start": "bun run --workspaces start",
+    "test": "bun run --workspaces test",
     "check": "ultracite check .",
-    "fix": "ultracite fix && bun run --filter=\"*\" format"
+    "fix": "ultracite fix && bun run --workspaces format"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.0",
